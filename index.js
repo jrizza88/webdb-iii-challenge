@@ -112,11 +112,11 @@ server.get('/api/students', async (req, res) => {
 
 server.get('/api/students/:id', async (req, res) => {
     try {
-        const cohort = await db('students')
+        const cohort = await db('cohorts')
         .select('students.id',  'students.name', 'cohorts.id as cohort')
-        .from('cohorts')
-        .innerJoin('students', 'cohorts.id', 'students.cohort_id')
-        .where({cohort_id: req.params.id})
+        .from('students')
+        .innerJoin('cohorts', 'cohorts.id', '=', 'students.cohort_id')
+        .where({'students.id': req.params.id})
         .first()
         res.status(200).json(cohort)
     } catch (error) {
