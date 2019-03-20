@@ -26,6 +26,9 @@ server.get('/api/cohorts/:id', async (req, res) => {
         const cohort = await db('cohorts')
         .where({id: req.params.id})
         .first();
+        if(!cohort) {
+            res.status(404).json({message: 'id not found!'})
+        }
         res.status(200).json(cohort)
     } catch (error){
         res.status(500).json(error)
@@ -47,6 +50,9 @@ server.put('/api/cohorts/:id', async (req, res) => {
     try{
         const cohort = req.body;
         const updateCohort = await db('cohorts').where({id: req.params.id}).first().update(cohort)
+        if (!updateCohort){
+            res.status(404).json({message: 'Record not found!'})
+        }
         res.status(200).json(updateCohort)
     } catch (error){
         res.status(500).json(error)
@@ -55,7 +61,12 @@ server.put('/api/cohorts/:id', async (req, res) => {
 
 server.delete('/api/cohorts/:id', async (req, res) => {
     try {
-
+        const cohort = await db('cohorts').where({id: req.params.id}).del()
+        if(cohort > 0) {
+            res.status(204).end()
+        } else {
+            res.status(404).json({message: 'Records not found'})
+        }
     } catch (error){
         res.status(500).json(error)
     }
