@@ -35,6 +35,19 @@ server.get('/api/cohorts/:id', async (req, res) => {
     }
 });
 
+server.get('/api/cohorts/:id/students', async (req, res) => {
+    try {
+        const cohort = await db('cohorts')
+        // .select('cohorts.id', 'students.name')
+        .from('cohorts')
+        .innerJoin('students', 'cohorts.id', 'students.cohort_id')
+        .where({cohort_id: req.params.id})
+        res.status(200).json(cohort)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+});
+
 server.post('/api/cohorts', async (req, res) => {
     try{
         const cohort = req.body;
