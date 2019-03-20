@@ -96,24 +96,11 @@ server.get('/api/students', async (req, res) => {
     }
 });
 
-// server.get('/api/students/:id', async (req, res) => {
-//     try {
-//         const students = await db('students')
-//         .where({id: req.params.id})
-//         .first();
-//         if(!students) {
-//             res.status(404).json({message: 'id not found!'})
-//         }
-//         res.status(200).json(students)
-//     } catch (error){
-//         res.status(500).json(error)
-//     }
-// });
 
 server.get('/api/students/:id', async (req, res) => {
     try {
         const cohort = await db('cohorts')
-        .select('students.id',  'students.name', 'cohorts.id as cohort')
+        .select('students.id',  'students.name', 'cohorts.name as cohort')
         .from('students')
         .innerJoin('cohorts', 'cohorts.id', '=', 'students.cohort_id')
         .where({'students.id': req.params.id})
